@@ -1,0 +1,22 @@
+<md-content>
+	<md-card>
+		<md-toolbar>
+			<div class="md-toolbar-tools">Dashboard</div>
+		</md-toolbar>
+		<md-card-content>
+			<md-list>
+				<md-subheader ng-if="homeView.myTickets.length > 0">Your Tickets</md-subheader>
+				<md-divider ng-if="homeView.myTickets.length > 0"></md-divider>
+				<ticket-preview-component ng-repeat="myTicket in homeView.myTickets" ticket-data="myTicket"></ticket-preview-component>
+
+				<md-subheader ng-if="homeView.unassignedTickets.length > 0">Unassigned Tickets</md-subheader>
+				<md-divider ng-if="homeView.unassignedTickets.length > 0"></md-divider>
+				<ticket-preview-component ng-repeat="unassignedTicket in homeView.unassignedTickets" ticket-data="unassignedTicket"></ticket-preview-component>
+
+				<md-subheader ng-if="homeView.soonTickets.length > 0">Tickets Coming Up (within 30 days)</md-subheader>
+				<md-divider ng-if="homeView.soonTickets.length > 0"></md-divider>
+				<ticket-preview-component ng-repeat="ticket in homeView.soonTickets" ticket-data="ticket"></ticket-preview-component>
+			</md-list>
+		</md-card-content>
+	</md-card>
+</md-content>

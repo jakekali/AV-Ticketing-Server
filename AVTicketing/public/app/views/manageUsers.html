@@ -1,0 +1,8 @@
+<md-list>
+	<md-list-item
+			ng-repeat="user in manageUsers.users"
+			ui-sref="admin.manageUser({user: user.id})"
+	>
+		{{user.firstName + ' ' + user.lastName}}
+	</md-list-item>
+</md-list>

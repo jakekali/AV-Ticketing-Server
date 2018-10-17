@@ -1,0 +1,11 @@
+<md-list-item ui-sref="ticket({id: ticketPreview.ticketData.TicketID})">
+	<md-divider></md-divider>
+	<div layout="row" flex style="padding-top:10px;">
+		<p flex="90" class="md-title">{{ticketPreview.ticketData.TicketSubject}} <span style="color:lightslategray;">#{{ticketPreview.ticketData.TicketID}}</span></p>
+		<div layout="column" style="font-size: small;" flex class="noButton">
+			<span>Priority: {{ticketPreview.ticketData.TicketPriority}}</span>
+			<span>Status: {{ticketPreview.ticketData.TicketStatus}}</span>
+			<span>Type: {{ticketPreview.ticketData.TicketType}}</span>
+		</div>
+	</div>
+</md-list-item>

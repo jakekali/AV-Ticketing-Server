@@ -1,0 +1,29 @@
+Existing Roles:
+<md-list>
+	<md-list-item
+			ng-repeat="role in manageUser.user.roles"
+			ng-click="null"
+	>
+		<span flex="90">{{role.display_name}}</span>
+		<md-button flex ng-click="manageUser.removeRole(role)">
+			<i class="material-icons middle-icon">remove_circle_outline</i>
+		</md-button>
+	</md-list-item>
+</md-list>
+<div flex>
+<md-input-container>
+	<label>Role</label>
+	<md-select
+			ng-model="manageUser.addUserRole"
+			ng-change="manageUser.addRole()"
+			md-selected-text="manageUser.getUserRoleText()"
+	>
+		<md-option
+				ng-repeat="roleEnum in manageUser.roles | filter: manageUser.alreadyAdded"
+				ng-value="roleEnum"
+		>
+			{{roleEnum.display_name}}
+		</md-option>
+	</md-select>
+</md-input-container>
+</div>

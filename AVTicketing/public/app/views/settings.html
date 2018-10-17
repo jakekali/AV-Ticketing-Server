@@ -1,0 +1,81 @@
+<md-toolbar>
+	<div class="md-toolbar-tools">
+		Settings
+	</div>
+</md-toolbar>
+<md-content>
+	<md-card flex>
+		<md-card-content>
+			<md-subheader>Schedule</md-subheader>
+			<md-list>
+				<md-list-item>
+					<md-button
+							ngf-pattern="'.csv'"
+							ngf-select="settingsView.uploadSchedule($file)"
+					><i class="material-icons">file_upload</i>Upload Schedule</md-button>
+				</md-list-item>
+				<md-list-item ng-click="settingsView.downloadSchedule()"><i class="material-icons">file_download</i>Download iCal Schedule</md-list-item>
+				<md-list-item href="app/resources/ScheduleTemplate.csv"><i class="material-icons">file_download</i>Download Schedule Template</md-list-item>
+			</md-list>
+
+			<md-subheader>User Settings</md-subheader>
+			<md-list>
+				<md-list-item>
+					<md-input-container>
+						<label>Phone Number (for SMS) (xxx-xxx-xxxx)</label>
+						<input maxlength="10" minlength="10" type="text" ng-model="settingsView.settings.phone_number">
+					</md-input-container>
+				</md-list-item>
+				<md-list-item>
+					<md-button class="md-raised md-primary" ng-click="settingsView.updateSettings()">Save User Settings</md-button>
+				</md-list-item>
+			</md-list>
+
+			<md-subheader>User Information</md-subheader>
+			<md-list>
+				<md-list-item>
+					<md-input-container>
+						<label>Email Address</label>
+						<input type="text" required ng-model="settingsView.userData.email"/>
+					</md-input-container>
+				</md-list-item>
+				<md-list-item>
+					<md-input-container>
+						<label>First Name</label>
+						<input type="text" required ng-model="settingsView.userData.firstName"/>
+					</md-input-container>
+					<md-input-container>
+						<label>Last Name</label>
+						<input type="text" required ng-model="settingsView.userData.lastName"/>
+					</md-input-container>
+				</md-list-item>
+				<md-list-item>
+					<md-button class="md-raised md-primary" ng-click="settingsView.updateUserInfo()">Update User Information</md-button>
+				</md-list-item>
+			</md-list>
+
+			<md-subheader>Change Password</md-subheader>
+			<md-list>
+				<md-list-item>
+					<md-input-container>
+						<label>Current Password</label>
+						<input type="password" required ng-model="settingsView.currentPassword"/>
+					</md-input-container>
+				</md-list-item>
+				<md-list-item>
+					<md-input-container>
+						<label>New Password</label>
+						<input type="password" required ng-model="settingsView.newPassword"/>
+					</md-input-container>
+					<md-input-container>
+						<label>Password Confirmation</label>
+						<input type="password" compare-to="settingsView.newPassword" ng-model="settingsView.newPasswordConfirmation"/>
+					</md-input-container>
+				</md-list-item>
+				<md-list-item>
+					<md-button class="md-raised md-primary" ng-click="settingsView.updatePassword()">Update Password</md-button>
+				</md-list-item>
+			</md-list>
+		</md-card-content>
+	</md-card>
+</md-content>

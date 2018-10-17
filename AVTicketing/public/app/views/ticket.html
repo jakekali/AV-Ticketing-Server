@@ -1,0 +1,135 @@
+<md-content>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<span flex>{{ticket.ticketData.Subject}} #{{ticket.ticketData.id}} - Freshdesk #{{ticket.ticketData.FreshdeskID}}</span>
+			<md-button ng-if="ticket.isCurrentUsersTicket != -1 && ticket.ticketData.users[ticket.isCurrentUsersTicket].status != 'Accepted'" class="md-raised" style="background-color: lawngreen" ng-click="ticket.setUserStatus('Accepted')">Accept</md-button>
+			<md-button ng-if="ticket.isCurrentUsersTicket != -1 && ticket.ticketData.users[ticket.isCurrentUsersTicket].status != 'Rejected'" class="md-raised" style="background-color: orangered" ng-click="ticket.setUserStatus('Rejected')">Reject</md-button>
+			<md-button ng-if="ticket.status.Status != 'Sent To IT'"
+			           class="md-raised" ng-click="ticket.sendToIT()"
+			           style="background-color: orangered">Send To IT</md-button>
+			<md-button class="md-raised" ng-click="ticket.updateFreshdesk()">Send to Freshdesk</md-button>
+		</div>
+		<div class="md-toolbar-tools" ng-if="ticket.ticketData.to_i_t != null" style="background-color: yellow;color: black;">
+			Ticket Has Been Sent To IT!
+		</div>
+	</md-toolbar>
+	<div layout="row">
+		<div flex="30" layout="column">
+			<md-card>
+				<md-toolbar>
+					<div class="md-toolbar-tools">Ticket Status</div>
+				</md-toolbar>
+				<md-card-content>
+					<md-select
+							aria-label="Change Ticket Status"
+							ng-model="ticket.ticketData.StatusID" ng-change="ticket.updateStatus()">
+						<md-option ng-repeat="status in ticket.statusArray" ng-value="status.id">{{status.Status}}</md-option>
+					</md-select>
+				</md-card-content>
+			</md-card>
+			<md-card>
+				<md-toolbar>
+					<div class="md-toolbar-tools">Ticket Type</div>
+				</md-toolbar>
+				<md-card-content>
+					{{ticket.ticketData.type.Type}}
+				</md-card-content>
+			</md-card>
+		</div>
+		<md-card flex="70">
+			<md-toolbar>
+				<div class="md-toolbar-tools">Ticket Data</div>
+			</md-toolbar>
+			<md-card-content>
+				<div layout-margin ng-if="ticket.ticketData.type.Type == 'Event'">
+					<span><b>Event Name: </b>{{ticket.ticketData.event_data.EventName}}</span>
+					<span><b>Event Date: </b>{{ticket.ticketData.event_data.EventDate.replace(' ', 'T')+'Z' | date : shortDate}}</span>
+					<span><b>Event Start Time: </b>{{ticket.ticketData.event_data.StartTime}}</span>
+					<md-divider></md-divider>
+				</div>
+
+				<div layout-margin>
+					<span>
+						<b>Requested By:</b>
+						<a ng-href="mailto:{{ticket.ticketData.requester.Email}}?Subject={{ticket.ticketData.Subject}}" target="_blank">
+							{{ticket.ticketData.requester.FirstName}} {{ticket.ticketData.requester.LastName}}</a>
+						 on {{ticket.ticketData.created_at_formatted | date:'short'}}
+					</span>
+					<md-divider></md-divider>
+				</div>
+
+				<div layout-margin ng-if="ticket.ticketData.ticket_boolean_attributes.length > 0">
+					<md-checkbox
+							ng-repeat="attribute in ticket.ticketData.ticket_boolean_attributes"
+							ng-model="attribute.pivot.AttributeValue"
+							ng-true-value="1" ng-false-value="0"
+							ng-change="ticket.updateAttribute(attribute.AttributeName, attribute.pivot.AttributeValue, 'Boolean')">
+						{{attribute.AttributeName | camelCaseToHuman | titlecase}}
+					</md-checkbox>
+					<md-divider></md-divider>
+				</div>
+				<div layout-margin ng-if="ticket.ticketData.ticket_string_attributes.length > 0">
+					<md-input-container ng-repeat="attribute in ticket.ticketData.ticket_string_attributes">
+						<label>{{attribute.AttributeName | camelCaseToHuman | titlecase}}</label>
+						<input type="text" ng-model="attribute.pivot.AttributeValue" ng-change="ticket.updateAttribute(attribute.AttributeName, attribute.pivot.AttributeValue, 'String')"/>
+					</md-input-container>
+					<md-input-container ng-repeat="attribute in ticket.ticketData.ticket_integer_attributes">
+						<label>{{attribute.AttributeName | camelCaseToHuman | titlecase}}</label>
+						<input type="number" ng-model="attribute.pivot.AttributeValue" ng-change="ticket.updateAttribute(attribute.AttributeName, attribute.pivot.AttributeValue, 'Integer')"/>
+					</md-input-container>
+				</div>
+
+
+				<div ng-bind-html="ticket.ticketData.Description"></div>
+			</md-card-content>
+		</md-card>
+	</div>
+	<md-card ng-if="ticket.isAdmin()">
+		<md-toolbar>
+			<div class="md-toolbar-tools" ng-class="{error: ticket.ticketData.users.length == 0}">Assigned To</div>
+		</md-toolbar>
+		<md-card-content layout="row">
+			<div flex="20">
+				<md-list>
+					<md-list-item ng-repeat="(id, user) in ticket.ticketData.users">
+						<span flex ng-mouseover="ticket.hoverUser(user)">{{user.firstName + " " + user.lastName}}</span>
+						<md-button ng-click="ticket.removeUser(id, user)"><i class="material-icons middle-icon">remove_circle_outline</i></md-button>
+						<md-divider></md-divider>
+					</md-list-item>
+				</md-list>
+				<md-select
+						aria-label="Add User To Ticket"
+						ng-model="ticket.ticketUserSelect" ng-change="ticket.addMember(ticket.ticketUserSelect)">
+					<md-option ng-repeat="user in ticket.avMembers" ng-value="user" ng-mouseover="ticket.hoverUser(user)" ng-mouseleave="ticket.hoverUser()">{{user.firstName + " " + user.lastName}}</md-option>
+				</md-select>
+			</div>
+			<div flex="10"></div>
+			<div flex="70">
+				{{ticket.hoverData}}
+				<div ui-calendar="{{ticket.uiConfig.calendar}}" calendar="scheduleCalendar" ng-model="ticket.hoverSources" id="scheduleCalendar"></div>
+			</div>
+		</md-card-content>
+		<md-tooltip ng-if="ticket.ticketData.users.length == 0">
+			Ticket hasn't been assigned yet.
+		</md-tooltip>
+	</md-card>
+	<md-card>
+		<md-toolbar>
+			<div class="md-toolbar-tools">Ticket Conversation</div>
+		</md-toolbar>
+		<md-card-content>
+			<md-subheader>Messages</md-subheader>
+			<md-list>
+				<md-list-item ng-repeat="message in ticket.ticketData.messages" layout="column" layout-align="left">
+					<p><b>From:</b> <a href="mailto:{{message.FromEmail}}">{{message.FromEmail}}</a></p>
+					<b>Message: </b><div ng-bind-html="message.Message" layout-margin="5"></div>
+					<md-divider></md-divider>
+				</md-list-item>
+			</md-list>
+			<ng-quill-editor ng-model="ticket.message"></ng-quill-editor>
+			<md-button class="md-raised md-primary" ng-click="ticket.sendMessage(false)">Send to Requester</md-button>
+			<md-button class="md-raised md-primary" ng-click="ticket.sendMessage(true)">Save Note</md-button>
+		</md-card-content>
+	</md-card>
+
+</md-content>

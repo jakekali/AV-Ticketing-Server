@@ -1,0 +1,21 @@
+.noButton{
+	padding: 0;
+	margin: 0;
+	line-height:20px;
+}
+
+.error{
+	background-color: red;
+}
+*{
+	word-wrap: break-word;
+}
+
+.middle-icon{
+	vertical-align: middle;
+}
+
+md-list-item .md-list-item-inner:before, md-list-item:before {
+	min-height: 20px !important;
+	/*height: 25px;*/
+}

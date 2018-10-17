@@ -1,0 +1,32 @@
+<md-input-container>
+	<label>Email (same as slack)</label>
+	<input type="text" ng-model="registerView.email">
+</md-input-container>
+<md-input-container>
+	<label>Password</label>
+	<input type="text" ng-model="registerView.password">
+</md-input-container>
+<md-input-container>
+	<label>First Name</label>
+	<input type="text" ng-model="registerView.firstName">
+</md-input-container>
+<md-input-container>
+	<label>Last Name</label>
+	<input type="text" ng-model="registerView.lastName">
+</md-input-container>
+<md-input-container style="margin-bottom: 40px;">
+	<label>Role</label>
+	<md-select
+			ng-model="registerView.role"
+			md-selected-text="registerView.getUserRoleText()"
+	>
+		<md-option
+				ng-repeat="roleEnum in registerView.roles"
+				ng-value="roleEnum"
+		>
+			{{roleEnum.display_name}}
+		</md-option>
+	</md-select>
+</md-input-container>
+
+<md-button class="md-raised" ng-click="registerView.saveUser()">Save User</md-button>

@@ -1,0 +1,19 @@
+<md-content>
+	<md-card>
+		<md-toolbar>
+			<div class="md-toolbar-tools">Login</div>
+		</md-toolbar>
+		<md-card-content>
+			<md-input-container>
+				<label>Username</label>
+				<input type="text" ng-model="login.username"/>
+			</md-input-container>
+			<md-input-container>
+				<label>Password</label>
+				<input type="password" ng-model="login.password"/>
+			</md-input-container>
+			<md-button class="md-raised md-primary" ng-click="login.login()">Login</md-button>
+			<a ui-sref="forgotPassword">Forgot Password?</a>
+		</md-card-content>
+	</md-card>
+</md-content>
